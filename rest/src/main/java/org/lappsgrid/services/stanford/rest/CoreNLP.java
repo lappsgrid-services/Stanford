@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  *
  */
-@RestController
+@RestController()
 public class CoreNLP
 {
 	private static final Logger logger = LoggerFactory.getLogger(CoreNLP.class);
@@ -43,14 +43,14 @@ public class CoreNLP
 		}
 	}
 
-	@GetMapping(path="/api/version", produces = "application/json")
+	@GetMapping(path="/version", produces = "application/json")
 	public String version() {
 		Map<String,String> data = new HashMap<String, String>();
 		data.put("version", Version.getVersion());
 		return Serializer.toPrettyJson(data);
 	}
 
-	@GetMapping(path="/api/count", produces="application/json")
+	@GetMapping(path="/count", produces="application/json")
 	public String count() {
 		Map<String,String> data = new HashMap<String, String>();
 		data.put("count", Long.toString(count.get()));
