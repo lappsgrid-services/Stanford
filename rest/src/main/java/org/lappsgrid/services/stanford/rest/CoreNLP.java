@@ -6,23 +6,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.slf4j.*;
+
 /**
  *
  */
 @RestController
 public class CoreNLP
 {
-	private Pipeline pipeline;
+	private static final Logger logger = LoggerFactory.getLogger(CoreNLP.class);
 
-	public CoreNLP()
-	{
-		pipeline = new Pipeline();
-	}
+	private static PipelineProxy pipeline = new PipelineProxy();
 
 	@PostMapping(path = "/api", consumes = "text/plain", produces = "application/json")
 	public String processText(@RequestBody String text) throws LifException
 	{
-		return pipeline.process(text);
+		try
+		{
+			logger.info("Processing text. Size: {}", text.length());
+			return pipeline.process(text);
+		}
+		catch (LifException e) {
+			logger.warn("Error processing request: " + e.getMessage());
+			throw e;
+		}
 	}
 
 }
