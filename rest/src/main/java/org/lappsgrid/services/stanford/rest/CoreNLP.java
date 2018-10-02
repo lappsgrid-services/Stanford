@@ -2,13 +2,12 @@ package org.lappsgrid.services.stanford.rest;
 
 import org.lappsgrid.serialization.LifException;
 import org.lappsgrid.serialization.Serializer;
-import org.lappsgrid.services.stanford.corenlp.Pipeline;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import org.slf4j.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,16 +24,21 @@ public class CoreNLP
 	private static PipelineProxy pipeline = new PipelineProxy();
 	private static AtomicLong count = new AtomicLong();
 
+	public CoreNLP() {
+	}
+
 	@PostMapping(path = "/api", consumes = "text/plain", produces = "application/json")
 	public String processText(@RequestBody String text) throws LifException
 	{
 		try
 		{
 			long transaction = count.incrementAndGet();
+
 			logger.info("{}. Processing text. Size: {}", transaction, text.length());
 			float start = System.nanoTime();
 			String result = pipeline.process(text);
 			logger.info("{}. Time: {}", transaction, ((System.nanoTime()-start)/1e6));
+
 			return result;
 		}
 		catch (LifException e) {
