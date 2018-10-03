@@ -2,8 +2,10 @@ REPO=docker.lappsgrid.org
 ORG=lappsgrid
 IMAGE=stanford
 VERSION=gdd
+JAR=service.jar
 
 docker:
+	if [ ! -e $(JAR) ] ; then cp ../../../target/$(JAR) . ; fi
 	docker build -t $(ORG)/$(IMAGE) .
 	
 tag:
